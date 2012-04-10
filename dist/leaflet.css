@@ -257,7 +257,7 @@ a.leaflet-active {
 /* Fade animations */
 
 .leaflet-fade-anim .leaflet-tile, .leaflet-fade-anim .leaflet-popup {
-	opacity: 0;
+	opacity: 1;
 
 	-webkit-transition: opacity 0.2s linear;
 	-moz-transition: opacity 0.2s linear;

@@ -31,19 +31,21 @@
 		'geo/projection/Projection.LonLat.js',
 		'geo/projection/Projection.Mercator.js',
 
-		'geo/crs/CRS.js',
+		'geo/crs/CRS.Flexible.js',
 		'geo/crs/CRS.EPSG3857.js',
 		'geo/crs/CRS.EPSG4326.js',
 		'geo/crs/CRS.EPSG3395.js',
 
 		'map/Map.js',
 
+		'map/ext/Map.Citymaps.js',
 		'map/ext/Map.Geolocation.js',
 		'map/ext/Map.Popup.js',
 		'map/ext/Map.Control.js',
 
 		'map/anim/Map.PanAnimation.js',
 		'map/anim/Map.ZoomAnimation.js',
+		'map/anim/Map.ZoomAnimation.Citymaps.js',
 
 		'core/Handler.js',
 		'map/handler/Map.Drag.js',
@@ -51,6 +53,7 @@
 		'map/handler/Map.DoubleClickZoom.js',
 		'map/handler/Map.ScrollWheelZoom.js',
 		'map/handler/Map.BoxZoom.js',
+		'map/handler/Map.KineticDrag.js',
 
 		'layer/LayerGroup.js',
 		'layer/FeatureGroup.js',
@@ -58,6 +61,9 @@
 		'layer/tile/TileLayer.js',
 		'layer/tile/TileLayer.WMS.js',
 		'layer/tile/TileLayer.Canvas.js',
+		'layer/tile/TileLayer.Citymaps.js',
+		'layer/tile/TileLayer.Data.js',
+		'layer/tile/TileLayer.TileCache.js',
 		'layer/ImageOverlay.js',
 		'layer/Popup.js',
 
@@ -66,6 +72,7 @@
 		'layer/marker/Marker.js',
 		'layer/marker/Marker.Popup.js',
 		'layer/marker/Marker.Drag.js',
+		'layer/marker/Marker.Citymaps.js',
 
 		'layer/vector/Path.js',
 		'layer/vector/Path.Popup.js',

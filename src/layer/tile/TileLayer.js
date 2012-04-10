@@ -34,6 +34,13 @@ L.TileLayer = L.Class.extend({
 		if (typeof subdomains === 'string') {
 			this.options.subdomains = subdomains.split('');
 		}
+		
+		if(this.options.visible) {
+			this._visibility = this.options.visible;
+		} else {
+			this._visibility = true;
+		}
+		this.setVisibility(this._visibility); 
 	},
 
 	onAdd: function (map, insertAtTheBottom) {
@@ -106,6 +113,9 @@ L.TileLayer = L.Class.extend({
 			first = tilePane.firstChild;
 
 		if (!this._container || tilePane.empty) {
+			if(this._container && this._container.parentNode == tilePane) {
+				tilePane.removeChild(this._container);
+			}
 			this._container = L.DomUtil.create('div', 'leaflet-layer');
 
 			if (this._insertAtTheBottom && first) {
@@ -113,7 +123,11 @@ L.TileLayer = L.Class.extend({
 			} else {
 				tilePane.appendChild(this._container);
 			}
-
+			
+			if(this.options.zIndex) {
+				this._container.style["zIndex"] = this.options.zIndex;
+			}
+			
 			if (this.options.opacity < 1) {
 				this._updateOpacity();
 			}
@@ -141,10 +155,15 @@ L.TileLayer = L.Class.extend({
 		}
 
 		if (clearOldContainer && this._container) {
+			if(this._map._tileBg) {
+				this._map._tileBg.innerHTML = '';
+			}
 			this._container.innerHTML = "";
 		}
 
 		this._initContainer();
+		this._container.innerHTML = '';
+		this._createTileGrid();
 	},
 
 	_update: function (e) {
@@ -163,13 +182,35 @@ L.TileLayer = L.Class.extend({
 				Math.floor(bounds.min.y / tileSize)),
 			seTilePoint = new L.Point(
 				Math.floor(bounds.max.x / tileSize),
-				Math.floor(bounds.max.y / tileSize)),
-			tileBounds = new L.Bounds(nwTilePoint, seTilePoint);
-
-		this._addTilesFromCenterOut(tileBounds);
-
-		if (this.options.unloadInvisibleTiles || this.options.reuseTiles) {
-			this._removeOtherTiles(tileBounds);
+				Math.floor(bounds.max.y / tileSize));
+		
+		if(this.options.buffer > 0) {
+			var buffer = this.options.buffer;
+			nwTilePoint.x -= buffer;
+			nwTilePoint.y -= buffer;
+			seTilePoint.x += buffer;
+			seTilePoint.y += buffer;
+		}	
+		var addTiles = false;
+		if(this.tileBounds != null && force === false) {
+			if(this.tileBounds.min.x != nwTilePoint.x || 
+				this.tileBounds.min.y != nwTilePoint.y ||
+				this.tileBounds.max.x != seTilePoint.x ||
+				this.tileBounds.max.y != seTilePoint.y) {
+					addTiles = true;
+			}
+		} else {
+			addTiles = true;
+		}
+		
+		if(addTiles) {
+			var tileBounds = new L.Bounds(nwTilePoint, seTilePoint);
+			this._boundsChanged = true;
+			this._addTilesFromCenterOut(tileBounds);
+			
+			if (this.options.unloadInvisibleTiles || this.options.reuseTiles) {
+				this._removeOtherTiles(tileBounds);
+			}
 		}
 	},
 
@@ -225,15 +266,21 @@ L.TileLayer = L.Class.extend({
 
 		this.fire("tileunload", {tile: tile, url: tile.src});
 
-		if (tile.parentNode === this._container) {
-			this._container.removeChild(tile);
-		}
-		if (this.options.reuseTiles) {
-			this._unusedTiles.push(tile);
-		}
+		// evil, don't do this! crashes Android 3, produces load errors, doesn't solve memory leaks
+		// this._tiles[key].src = '';
 
-		tile.src = L.Util.emptyImageUrl;
-
+		if (tile.parentNode == this._container) {
+			//this._container.removeChild(tile);
+			if(this.options.img) {
+				this.src = "";
+			} else {
+				tile.style.background = "transparent";
+			}
+			tile.visibility = "hidden";
+			tile.style.top = "";
+			tile.style.left = "";
+			this._gridImages.push(tile);
+		}
 		delete this._tiles[key];
 	},
 
@@ -302,12 +349,36 @@ L.TileLayer = L.Class.extend({
 	},
 
 	_createTileProto: function () {
-		var img = this._tileImg = L.DomUtil.create('img', 'leaflet-tile');
-		img.galleryimg = 'no';
+		
+	},
+	
+	_createTileProto: function() {
+		if(this.options.img) {
+			var img = this._tileImg = L.DomUtil.create('img', 'leaflet-tile');
+			img.galleryimg = 'no';
 
-		var tileSize = this.options.tileSize;
-		img.style.width = tileSize + 'px';
-		img.style.height = tileSize + 'px';
+			var tileSize = this.options.tileSize;
+			img.style.width = tileSize + 'px';
+			img.style.height = tileSize + 'px';
+		} else {
+			this._tileImg = L.DomUtil.create('div', 'leaflet-tile');
+			this._tileImg.galleryimg = 'no';
+	
+			var tileSize = this.options.tileSize;
+			this._tileImg.style.width = tileSize + 'px';
+			this._tileImg.style.height = tileSize + 'px';
+		}
+	},
+
+	_createTile: function() {
+		//var tile = this._tileImg.cloneNode(false);
+		if(this._gridImages.length == 0) {
+			this._createGridTile(this.options.tileSize);
+		}
+		var tile = this._gridImages.shift();
+		tile.src = "";
+		tile.onselectstart = tile.onmousemove = L.Util.falseFn;
+		return tile;
 	},
 
 	_getTile: function () {
@@ -330,11 +401,15 @@ L.TileLayer = L.Class.extend({
 	},
 
 	_loadTile: function (tile, tilePoint, zoom) {
-		tile._layer  = this;
-		tile.onload  = this._tileOnLoad;
+		tile._layer = this;
+		tile.onload = this._tileOnLoad;
 		tile.onerror = this._tileOnError;
-
-		tile.src     = this.getTileUrl(tilePoint, zoom);
+		if(this.options.img) {
+			tile.src     = this.getTileUrl(tilePoint, zoom);
+		} else {
+			tile.style.background = "url("+this.getTileUrl(tilePoint, zoom)+")";
+			tile.style.visibility = "visible";
+		}
 	},
 
 	_tileOnLoad: function (e) {
@@ -365,5 +440,50 @@ L.TileLayer = L.Class.extend({
 		if (newUrl) {
 			this.src = newUrl;
 		}
+	},
+	
+	_createTileGrid: function() {
+		var size = this._map.getSize();
+		var tileSize = this.options.tileSize;
+		
+		var buffer = 2;
+		if(this.options.buffer > 0) {
+			buffer += (this.options.buffer * 2);
+		}
+		
+		var gridWidth = Math.ceil(size.x / tileSize) + buffer;
+		var gridHeight = Math.ceil(size.x / tileSize) + buffer;
+		
+		var numTiles = gridWidth * gridHeight;
+		this._gridImages = [];
+		for(var i = 0; i < numTiles; i++) {
+			this._createGridTile(tileSize);
+		}
+	},
+	
+	_createGridTile: function(tileSize) {
+		var img = L.DomUtil.create('div', 'leaflet-tile');
+		img.style.width = tileSize + "px";
+		img.style.height = tileSize + "px";
+		img.style.visibility = "hidden";
+		img.style.backgroundColor = "transparent";
+		this._gridImages.push(img);
+		this._container.appendChild(img);
+		return img;
+	},
+	
+	setVisibility: function(visible) {
+		if(this._container) {
+			if(visible) {
+				this._container.style.display = "";
+			} else {
+				this._container.style.display = "none";
+			}
+		}
+		this._visibility = visible;
+	},
+	
+	getVisibility: function() {
+		return this._visibility;
 	}
 });
