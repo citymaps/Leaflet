@@ -339,7 +339,7 @@ a.leaflet-active {
 	background: #ddd;
 	}
 .leaflet-container a {
-	color: #0078A8;
+	/* color: #0078A8; */
 	}
 .leaflet-zoom-box {
 	border: 2px dotted #05f;
