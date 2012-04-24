@@ -73,6 +73,9 @@ L.Draggable = L.Class.extend({
 	},
 
 	_onMove: function (e) {
+    if (!this._enabled) {
+      return;
+    }
 		if (e.touches && e.touches.length > 1) {
 			return;
 		}
