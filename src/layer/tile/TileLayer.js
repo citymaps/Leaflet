@@ -274,11 +274,11 @@ L.TileLayer = L.Class.extend({
 			if(this.options.img) {
 				this.src = "";
 			} else {
-				tile.style.background = "transparent";
+				//tile.style.background = "transparent";
 			}
 			tile.visibility = "hidden";
-			tile.style.top = "";
-			tile.style.left = "";
+			//tile.style.top = "";
+			//tile.style.left = "";
 			this._gridImages.push(tile);
 		}
 		delete this._tiles[key];
@@ -392,12 +392,6 @@ L.TileLayer = L.Class.extend({
 
 	_resetTile: function (tile) {
 		// Override if data stored on a tile needs to be cleaned up before reuse
-	},
-
-	_createTile: function () {
-		var tile = this._tileImg.cloneNode(false);
-		tile.onselectstart = tile.onmousemove = L.Util.falseFn;
-		return tile;
 	},
 
 	_loadTile: function (tile, tilePoint, zoom) {
