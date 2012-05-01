@@ -34,7 +34,7 @@ L.Map.KineticDrag = L.Map.Drag.extend({
 		}
 		this.points = [];
 		L.Map.Drag.prototype._onDragStart.apply(this);
-		this.profilingEnabled = true;
+		this.profilingEnabled = false;
 		if(this.profilingEnabled) {
 			if(this.profiling) {
 				console.profileEnd();
