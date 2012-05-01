@@ -27,6 +27,7 @@ L.Map.KineticDrag = L.Map.Drag.extend({
 	},
 	
 	_onDragStart: function() {
+		console.profile();
 		this.points = [];
 		L.Map.Drag.prototype._onDragStart.apply(this);
 	},
@@ -64,9 +65,10 @@ L.Map.KineticDrag = L.Map.Drag.extend({
       
 
       var a = -0.0040;
-      
+     
       var callback = function() {
         if(this.intervalID == null) {
+        		console.profileEnd();
         		this._map.fire('moveend');
 						this._map.fire('dragend');
             return;
@@ -109,6 +111,7 @@ L.Map.KineticDrag = L.Map.Drag.extend({
           L.Util.bind(callback, this),
           this.interval);
     } else {
+    	console.profileEnd();
     	this._map.fire('moveend');
 			this._map.fire('dragend');
     }
@@ -117,9 +120,10 @@ L.Map.KineticDrag = L.Map.Drag.extend({
 	_stopPanning: function() {
 		clearInterval(this.intervalID);
     this.intervalID = null;
-    
+    console.profileEnd();
 		this._map.fire('moveend');
 		this._map.fire('dragend');
+		
 	},
 	
 	

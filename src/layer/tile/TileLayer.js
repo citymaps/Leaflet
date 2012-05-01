@@ -232,16 +232,16 @@ L.TileLayer = L.Class.extend({
 			return a.distanceTo(center) - b.distanceTo(center);
 		});
 
-		var fragment = document.createDocumentFragment();
+		//var fragment = document.createDocumentFragment();
 
 		this._tilesToLoad = queue.length;
 
 		var k, len;
 		for (k = 0, len = this._tilesToLoad; k < len; k++) {
-			this._addTile(queue[k], fragment);
+			this._addTile(queue[k], null);
 		}
 
-		this._container.appendChild(fragment);
+		//this._container.appendChild(fragment);
 	},
 
 	_removeOtherTiles: function (bounds) {
@@ -317,7 +317,7 @@ L.TileLayer = L.Class.extend({
 
 		this._loadTile(tile, tilePoint, zoom);
 
-		container.appendChild(tile);
+		//container.appendChild(tile);
 	},
 
 	_getOffsetZoom: function (zoom) {
@@ -402,8 +402,8 @@ L.TileLayer = L.Class.extend({
 			tile.src     = this.getTileUrl(tilePoint, zoom);
 		} else {
 			tile.style.background = "url("+this.getTileUrl(tilePoint, zoom)+")";
-			tile.style.visibility = "visible";
 		}
+		tile.style.visibility = "visible";
 	},
 
 	_tileOnLoad: function (e) {
@@ -456,11 +456,16 @@ L.TileLayer = L.Class.extend({
 	},
 	
 	_createGridTile: function(tileSize) {
-		var img = L.DomUtil.create('div', 'leaflet-tile');
+		var img;
+		if(this.options.img) {
+			 img = L.DomUtil.create('img', 'leaflet-tile');
+		} else {
+			 img = L.DomUtil.create('div', 'leaflet-tile');
+			 img.style.backgroundColor = "transparent";
+		}
 		img.style.width = tileSize + "px";
 		img.style.height = tileSize + "px";
 		img.style.visibility = "hidden";
-		img.style.backgroundColor = "transparent";
 		this._gridImages.push(img);
 		this._container.appendChild(img);
 		return img;
