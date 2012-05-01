@@ -21,7 +21,8 @@ L.TileLayer = L.Class.extend({
 
 		unloadInvisibleTiles: L.Browser.mobile,
 		updateWhenIdle: L.Browser.mobile,
-		reuseTiles: false
+		reuseTiles: false,
+		buffer: 0
 	},
 
 	initialize: function (url, options) {
@@ -306,7 +307,7 @@ L.TileLayer = L.Class.extend({
 		}
 
 		// get unused tile - or create a new tile
-		var tile = this._getTile();
+		var tile = this._createTile();
 		L.DomUtil.setPosition(tile, tilePos);
 
 		this._tiles[key] = tile;

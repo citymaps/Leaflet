@@ -27,9 +27,18 @@ L.Map.KineticDrag = L.Map.Drag.extend({
 	},
 	
 	_onDragStart: function() {
-		console.profile();
+		
+		if(this.moveEndTimer) {
+			clearTimeout(this.moveEndTimer);
+			this.moveEndTimer = null;
+		}
 		this.points = [];
 		L.Map.Drag.prototype._onDragStart.apply(this);
+		if(this.profiling) {
+			console.profileEnd();
+		}
+		console.profile();
+		this.profiling = true;
 	},
 	
 	_onDrag: function() {
@@ -69,6 +78,7 @@ L.Map.KineticDrag = L.Map.Drag.extend({
       var callback = function() {
         if(this.intervalID == null) {
         		console.profileEnd();
+        		this.profiling = false;
         		this._map.fire('moveend');
 						this._map.fire('dragend');
             return;
@@ -112,6 +122,7 @@ L.Map.KineticDrag = L.Map.Drag.extend({
           this.interval);
     } else {
     	console.profileEnd();
+    	this.profiling = false;
     	this._map.fire('moveend');
 			this._map.fire('dragend');
     }
@@ -119,10 +130,14 @@ L.Map.KineticDrag = L.Map.Drag.extend({
 	
 	_stopPanning: function() {
 		clearInterval(this.intervalID);
-    this.intervalID = null;
-    console.profileEnd();
-		this._map.fire('moveend');
-		this._map.fire('dragend');
+		this.intervalID = null;
+		this.moveEndTimer = window.setTimeout(L.Util.bind(function() {
+	    console.profileEnd();
+	    this.profiling = false;
+			this._map.fire('moveend');
+			this._map.fire('dragend');
+		},this), 200);
+    
 		
 	},
 	

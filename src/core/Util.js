@@ -36,7 +36,7 @@ L.Util = {
 
 	requestAnimFrame: (function () {
 		function timeoutDefer(callback) {
-			window.setTimeout(callback, 1000 / 60);
+			window.setTimeout(callback, 1000 / 10);
 		}
 
 		var requestFn = window.requestAnimationFrame ||
@@ -45,6 +45,7 @@ L.Util = {
 			window.oRequestAnimationFrame ||
 			window.msRequestAnimationFrame ||
 			timeoutDefer;
+		requestFn = timeoutDefer;
 
 		return function (callback, context, immediate, contextEl) {
 			callback = context ? L.Util.bind(callback, context) : callback;
