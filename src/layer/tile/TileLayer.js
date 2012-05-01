@@ -193,7 +193,7 @@ L.TileLayer = L.Class.extend({
 			seTilePoint.y += buffer;
 		}	
 		var addTiles = false;
-		if(this.tileBounds != null && force === false) {
+		if(this.tileBounds != null) {
 			if(this.tileBounds.min.x != nwTilePoint.x || 
 				this.tileBounds.min.y != nwTilePoint.y ||
 				this.tileBounds.max.x != seTilePoint.x ||
@@ -208,10 +208,11 @@ L.TileLayer = L.Class.extend({
 			var tileBounds = new L.Bounds(nwTilePoint, seTilePoint);
 			this._boundsChanged = true;
 			this._addTilesFromCenterOut(tileBounds);
-			
+			this.tileBounds = tileBounds;
 			if (this.options.unloadInvisibleTiles || this.options.reuseTiles) {
 				this._removeOtherTiles(tileBounds);
 			}
+			
 		}
 	},
 
@@ -241,7 +242,7 @@ L.TileLayer = L.Class.extend({
 		for (k = 0, len = this._tilesToLoad; k < len; k++) {
 			this._addTile(queue[k], null);
 		}
-
+		
 		//this._container.appendChild(fragment);
 	},
 
@@ -307,6 +308,11 @@ L.TileLayer = L.Class.extend({
 		}
 
 		// get unused tile - or create a new tile
+		if(!window.addTileCalls) {
+			addTileCalls = 0;
+		}
+		addTileCalls++;
+		console.log("addTile call: "+addTileCalls);
 		var tile = this._createTile();
 		L.DomUtil.setPosition(tile, tilePos);
 
