@@ -42,6 +42,7 @@ L.TileLayer = L.Class.extend({
 			this._visibility = true;
 		}
 		this.setVisibility(this._visibility); 
+		this.options.updateWhenIdle = true;
 	},
 
 	onAdd: function (map, insertAtTheBottom) {
@@ -205,12 +206,13 @@ L.TileLayer = L.Class.extend({
 		}
 		
 		if(addTiles) {
-			var tileBounds = new L.Bounds(nwTilePoint, seTilePoint);
+			//console.log("tile bounds changed");
+			this.tileBounds = new L.Bounds(nwTilePoint, seTilePoint);
 			this._boundsChanged = true;
-			this._addTilesFromCenterOut(tileBounds);
-			this.tileBounds = tileBounds;
+			this._addTilesFromCenterOut(this.tileBounds);
+			
 			if (this.options.unloadInvisibleTiles || this.options.reuseTiles) {
-				this._removeOtherTiles(tileBounds);
+				this._removeOtherTiles(this.tileBounds);
 			}
 			
 		}
@@ -312,7 +314,7 @@ L.TileLayer = L.Class.extend({
 			addTileCalls = 0;
 		}
 		addTileCalls++;
-		console.log("addTile call: "+addTileCalls);
+		//console.log("addTile call: "+addTileCalls);
 		var tile = this._createTile();
 		L.DomUtil.setPosition(tile, tilePos);
 

@@ -34,10 +34,13 @@ L.Map.KineticDrag = L.Map.Drag.extend({
 		}
 		this.points = [];
 		L.Map.Drag.prototype._onDragStart.apply(this);
-		if(this.profiling) {
-			//console.profileEnd();
+		this.profilingEnabled = true;
+		if(this.profilingEnabled) {
+			if(this.profiling) {
+				console.profileEnd();
+			}
+			console.profile();
 		}
-		//console.profile();
 		this.profiling = true;
 	},
 	
@@ -77,8 +80,10 @@ L.Map.KineticDrag = L.Map.Drag.extend({
      
       var callback = function() {
         if(this.intervalID == null) {
-        		//console.profileEnd();
-        		this.profiling = false;
+        		if(this.profilingEnabled) {
+	        		console.profileEnd();
+	        		this.profiling = false;
+        		}
         		this._map.fire('moveend');
 						this._map.fire('dragend');
             return;
@@ -121,8 +126,10 @@ L.Map.KineticDrag = L.Map.Drag.extend({
           L.Util.bind(callback, this),
           this.interval);
     } else {
-    	//console.profileEnd();
-    	this.profiling = false;
+    	if(this.profilingEnabled) {
+    		console.profileEnd();
+    		this.profiling = false;
+  		}
     	this._map.fire('moveend');
 			this._map.fire('dragend');
     }
@@ -132,8 +139,10 @@ L.Map.KineticDrag = L.Map.Drag.extend({
 		clearInterval(this.intervalID);
 		this.intervalID = null;
 		this.moveEndTimer = window.setTimeout(L.Util.bind(function() {
-	    //console.profileEnd();
-	    this.profiling = false;
+	    if(this.profilingEnabled) {
+    		console.profileEnd();
+    		this.profiling = false;
+  		}
 			this._map.fire('moveend');
 			this._map.fire('dragend');
 		},this), 200);
@@ -172,4 +181,4 @@ L.Map.KineticDrag = L.Map.Drag.extend({
 	
 });
 
-L.Map.addInitHook('addHandler', 'dragging', L.Map.KineticDrag);
+//L.Map.addInitHook('addHandler', 'dragging', L.Map.KineticDrag);

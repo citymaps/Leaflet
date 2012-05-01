@@ -6,9 +6,9 @@ L.Map.mergeOptions({
 	dragging: true,
 
 	inertia: !L.Browser.android,
-	inertiaDeceleration: L.Browser.touch ? 3000 : 20000, // px/s^2
-	inertiaMaxSpeed:     L.Browser.touch ? 1500 : 4000, // px/s
-	inertiaThreshold:    L.Browser.touch ? 32   : 1000, // ms
+	inertiaDeceleration: L.Browser.touch ? 3000 : 3000, // px/s^2
+	inertiaMaxSpeed:     L.Browser.touch ? 1500 : 100000, // px/s
+	inertiaThreshold:    L.Browser.touch ? 32   : 10000, // ms
 
 	// TODO refactor, move to CRS
 	worldCopyJump: true,
