@@ -181,4 +181,4 @@ L.Map.KineticDrag = L.Map.Drag.extend({
 	
 });
 
-//L.Map.addInitHook('addHandler', 'dragging', L.Map.KineticDrag);
+L.Map.addInitHook('addHandler', 'dragging', L.Map.KineticDrag);

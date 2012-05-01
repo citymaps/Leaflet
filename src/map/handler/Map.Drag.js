@@ -148,4 +148,4 @@ L.Map.Drag = L.Handler.extend({
 	}
 });
 
-L.Map.addInitHook('addHandler', 'dragging', L.Map.Drag);
+//L.Map.addInitHook('addHandler', 'dragging', L.Map.Drag);
