@@ -410,7 +410,8 @@ L.TileLayer = L.Class.extend({
 		if(this.options.img) {
 			tile.src     = this.getTileUrl(tilePoint, zoom);
 		} else {
-			tile.style.background = "url("+this.getTileUrl(tilePoint, zoom)+")";
+			//tile.style.background = "url("+this.getTileUrl(tilePoint, zoom, "subways")+"),url("+this.getTileUrl(tilePoint, zoom)+")";
+			tile.style.backgroundImage = "url("+this.getTileUrl(tilePoint, zoom)+")";
 		}
 		tile.style.visibility = "visible";
 	},
