@@ -2,7 +2,7 @@ L.Map.KineticDrag = L.Map.Drag.extend({
 	
 	points: [],
 	
-	maxPoints: 100,
+	maxPoints: 50,
 	
 	interval: 10,
 	
@@ -76,7 +76,7 @@ L.Map.KineticDrag = L.Map.Drag.extend({
       var lastY = 0;
       
 
-      var a = -0.0040;
+      var a = -0.01;
      
       var callback = function() {
         if(this.intervalID == null) {
