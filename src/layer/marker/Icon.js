@@ -57,9 +57,16 @@ L.Icon = L.Class.extend({
 
 	_createImg: function (src) {
 		var el;
-		if (!L.Browser.ie6) {
+		if(this.img) {
 			el = document.createElement('img');
 			el.src = src;
+			el.style.visibility = "visible";
+		} else if (!L.Browser.ie6) {
+			el = document.createElement('div');
+			//el.src = src;
+			
+			el.style.background = "url("+src+")";
+			el.style.visibility = "visible";
 		} else {
 			el = document.createElement('div');
 			el.style.filter = 'progid:DXImageTransform.Microsoft.AlphaImageLoader(src="' + src + '")';
