@@ -57,7 +57,7 @@ L.Icon = L.Class.extend({
 
 	_createImg: function (src) {
 		var el;
-		if(this.img) {
+		if(this.options.img) {
 			el = document.createElement('img');
 			el.src = src;
 			el.style.visibility = "visible";
