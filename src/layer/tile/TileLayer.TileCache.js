@@ -5,7 +5,7 @@ L.TileLayer.TileCache = L.TileLayer.Citymaps.extend({
 		this._layername = layername;
 	},
 	
-	getTileUrl: function(tilePoint, zoom) {
+	getTileUrl: function(tilePoint, zoom, layer) {
 		function zeroPad(number, length) {
         number = String(number);
         var zeros = [];
@@ -16,6 +16,9 @@ L.TileLayer.TileCache = L.TileLayer.Citymaps.extend({
     }
     var components;
     var params = "";
+    if(!layer) {
+    	layer = this._layername;
+    }
     if(this.options.config) {
    		components = [
    			this._layername,
@@ -29,7 +32,7 @@ L.TileLayer.TileCache = L.TileLayer.Citymaps.extend({
 	    var full_y = zeroPad(tilePoint.y, 9);
 	 		zoom = zeroPad(zoom, 2);
 	    components = [
-	        this._layername,
+	        layer,
 	        zeroPad(zoom, 2),
 	        full_x.substring(0,3),
 	        full_x.substring(3,6),

@@ -79,6 +79,12 @@ L.Marker = L.Class.extend({
 
 		if (!this._icon) {
 			this._icon = options.icon.createIcon();
+			
+			if(this.options.icon.options.attributes) { 
+  			for(var key in this.options.icon.options.attributes) {
+  			  this._icon.setAttribute(key, this.options.icon.options.attributes[key]);
+  			}
+  		}
 
 			if (options.title) {
 				this._icon.title = options.title;
