@@ -166,6 +166,7 @@ L.TileLayer = L.Class.extend({
 		this._initContainer();
 		this._container.innerHTML = '';
 		this._createTileGrid();
+		this.tileBounds = null;
 	},
 
 	_update: function (e) {
