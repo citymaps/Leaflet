@@ -21,7 +21,8 @@ L.TileLayer.WMS = L.TileLayer.extend({
 				this.wmsParams[i] = options[i];
 			}
 		}
-		this.wmsParams.srs = "EPSG:900913";
+		this.wmsParams.srs = "EPSG:900913"; 
+		
 		L.Util.setOptions(this, options);
 	},
 	

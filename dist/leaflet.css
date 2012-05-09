@@ -266,6 +266,7 @@ a.leaflet-active {
 	}
 .leaflet-fade-anim .leaflet-tile-loaded, .leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
 	opacity: 1;
+	
 	}
 
 .leaflet-zoom-anim .leaflet-tile, .leaflet-pan-anim .leaflet-tile {
