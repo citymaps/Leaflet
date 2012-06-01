@@ -23,11 +23,11 @@ L.TileLayer.WMS = L.TileLayer.extend({
 			}
 		}
 		this.wmsParams.srs = "EPSG:900913";
+		
+		L.Util.setOptions(this, options);
 		if (this.wmsParams.gutter > 0) {
 			this.options.tileSize += this.wmsParams.gutter*2;
 		} 
-		
-		L.Util.setOptions(this, options);
 	},
 	
 	onAdd: function(map) {
