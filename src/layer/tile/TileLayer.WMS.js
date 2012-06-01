@@ -25,9 +25,6 @@ L.TileLayer.WMS = L.TileLayer.extend({
 		this.wmsParams.srs = "EPSG:900913";
 		
 		L.Util.setOptions(this, options);
-		if (this.wmsParams.gutter > 0) {
-			this.options.tileSize += this.wmsParams.gutter*2;
-		} 
 	},
 	
 	onAdd: function(map) {
@@ -40,7 +37,7 @@ L.TileLayer.WMS = L.TileLayer.extend({
 	},
 	
 	getTileUrl: function(/*Point*/ tilePoint, /*Number*/ zoom)/*-> String*/ {
-		var tileSize = this.options.tileSize,
+		var tileSize = this.options.tileSize + (this.wmsParams.gutter * 2),
 			nwPoint = tilePoint.multiplyBy(tileSize),
 			sePoint = nwPoint.add(new L.Point(tileSize, tileSize)),
 			nwMap = this._map.unproject(nwPoint, this._zoom, true),
