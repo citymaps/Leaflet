@@ -6,7 +6,8 @@ L.TileLayer.WMS = L.TileLayer.extend({
 		layers: '',
 		styles: '',
 		format: 'image/jpeg',
-		transparent: false
+		transparent: false,
+		gutter: 100
 	},
 
 	initialize: function(/*String*/ url, /*Object*/ options) {
@@ -21,7 +22,10 @@ L.TileLayer.WMS = L.TileLayer.extend({
 				this.wmsParams[i] = options[i];
 			}
 		}
-		this.wmsParams.srs = "EPSG:900913"; 
+		this.wmsParams.srs = "EPSG:900913";
+		if (this.wmsParams.gutter > 0) {
+			this.options.tileSize += this.wmsParams.gutter*2;
+		} 
 		
 		L.Util.setOptions(this, options);
 	},
@@ -46,5 +50,12 @@ L.TileLayer.WMS = L.TileLayer.extend({
 			bbox = [nw.x, se.y, se.x, nw.y].join(',');
 		this.wmsParams.random = Math.random();
 		return this._url + L.Util.getParamString(this.wmsParams) + "&bbox=" + bbox;
+	},
+	
+	_createGridTile: function(tileSize) {
+		var gutter = this.wmsParams.gutter;
+		var img = L.TileLayer.prototype._createGridTile.apply(this, [tileSize]);
+		img.style["backgroundPosition"] = -gutter + "px " + -gutter + "px";
+		return img;
 	}
 });
