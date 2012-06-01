@@ -16,6 +16,7 @@ L.TileLayer.WMS = L.TileLayer.extend({
 		this.wmsParams = L.Util.extend({}, this.defaultWmsParams);
 		this.wmsParams.width = this.wmsParams.height = this.options.tileSize;
 		
+		
 		for (var i in options) {
 			// all keys that are not TileLayer options go to WMS params
 			if (!this.options.hasOwnProperty(i)) {
@@ -37,15 +38,18 @@ L.TileLayer.WMS = L.TileLayer.extend({
 	},
 	
 	getTileUrl: function(/*Point*/ tilePoint, /*Number*/ zoom)/*-> String*/ {
-		var tileSize = this.options.tileSize + (this.wmsParams.gutter * 2),
+		var tileSize = this.options.tileSize,
+		
 			nwPoint = tilePoint.multiplyBy(tileSize),
 			sePoint = nwPoint.add(new L.Point(tileSize, tileSize)),
 			nwMap = this._map.unproject(nwPoint, this._zoom, true),
 			seMap = this._map.unproject(sePoint, this._zoom, true),
 			nw = this._map.options.crs.project(nwMap),
-			se = this._map.options.crs.project(seMap),
-			bbox = [nw.x, se.y, se.x, nw.y].join(',');
+			se = this._map.options.crs.project(seMap);
 		this.wmsParams.random = Math.random();
+		this.wmsParams.width = this.wmsParams.height = tileSize + (this.wmsParams.gutter * 2);
+		var gutter = this.wmsParams.gutter * this._map.getResolution();
+		var bbox = [nw.x-gutter, se.y-gutter, se.x+gutter, nw.y+gutter].join(',');
 		return this._url + L.Util.getParamString(this.wmsParams) + "&bbox=" + bbox;
 	},
 	
