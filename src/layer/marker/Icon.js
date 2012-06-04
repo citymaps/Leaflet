@@ -12,7 +12,7 @@ L.Icon = L.Class.extend({
 	},
 
 	initialize: function (options) {
-		L.Util.setOptions(this, options);
+		this.options = L.Util.setOptions(this, options);
 	},
 
 	createIcon: function () {
