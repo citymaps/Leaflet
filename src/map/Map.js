@@ -506,7 +506,7 @@ L.Map = L.Class.extend({
 
 		L.DomEvent.addListener(this._container, 'click', this._onMouseClick, this);
 
-		var events = ['dblclick', 'mousedown', 'mouseenter', 'mouseleave', 'mousemove', 'contextmenu'];
+		var events = ['dblclick', 'mouseenter', 'mouseleave', 'mousemove', 'contextmenu'];
 
 		var i, len;
 

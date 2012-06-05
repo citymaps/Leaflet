@@ -9,6 +9,7 @@ L.DivIcon = L.Icon.extend({
 	},
 
 	createIcon: function () {
+		this.type = 'label';
 		var div = document.createElement('div');
 		this._setIconStyles(div, 'icon');
 		div.innerHTML = this.options.iconUrl;

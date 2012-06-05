@@ -16,6 +16,7 @@ L.Icon = L.Class.extend({
 	},
 
 	createIcon: function () {
+		this.type = 'image';
 		return this._createIcon('icon');
 	},
 

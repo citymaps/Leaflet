@@ -18,13 +18,13 @@ L.Marker.Citymaps = L.Marker.extend({
 		this.angle = deg;
 	},
 	
-	_fireMouseEvent: function(e) {
+	/*_fireMouseEvent: function(e) {
 		if(e.type == 'mousedown') {
 			L.DomEvent.preventDefault(e);
 		} else {
 			L.Marker.prototype._fireMouseEvent.apply(this,[e]);
 		}
-	},
+	},*/
 	
 	addClass: function(className) {
 		var classes = this._icon.className.split(" ");
