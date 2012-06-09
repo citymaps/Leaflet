@@ -16,10 +16,7 @@ L.Map.Citymaps = L.Map.extend({
 		this.options.crs.scales = this._calculateScales(this.options.scales);
 		this._scale = this.options.crs.scale(zoom);
 		L.Map.prototype.initialize.apply(this, arguments);
-		if(this.options.restrictedExtent) {
-			//this.on('move',this._restrictExtent,this);
-			this.restrictedBounds = this._getRestrictedBounds(zoom);
-		}
+		
 		this.on('movestart', this._removeTileBg, this);
 		this.on('zoomstart', this._zoomStart, this);
 		this.on('viewreset', this._viewReset, this);
