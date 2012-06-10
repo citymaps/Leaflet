@@ -65,7 +65,12 @@ L.Map.Citymaps = L.Map.extend({
 	},
 
 	pixelToLatLng: function(/*Point*/ point) {
-		return this.unproject(point.add(this._initialTopLeftPoint));
+		//return this.unproject(point.add(this._initialTopLeftPoint));
+		var e = {pageX: point.x, pageY: point.y};
+		var containerPoint = this.mouseEventToContainerPoint(e),
+			layerPoint = this.containerPointToLayerPoint(containerPoint),
+			latlng = this.layerPointToLatLng(layerPoint);
+		return latlng;
 	},
 
 	latLngToPixel: function(/*LatLng*/ latlng) {
