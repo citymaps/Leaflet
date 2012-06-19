@@ -84,17 +84,20 @@ L.Draggable = L.Class.extend({
 
 		var first = (e.touches && e.touches.length === 1 ? e.touches[0] : e);
 
-		if (!this._moved) {
-			this.fire('dragstart');
-			this._moved = true;
-		}
-		this._moving = true;
 
 		var newPoint = new L.Point(first.clientX, first.clientY);
 		this._newPos = this._startPos.add(newPoint).subtract(this._startPoint);
 
-		L.Util.cancelAnimFrame(this._animRequest);
-		this._animRequest = L.Util.requestAnimFrame(this._updatePosition, this, true, this._dragStartTarget);
+		var delta = this._newPos.subtract(this._startPos);
+		if(Math.abs(delta.x) > 5 || Math.abs(delta.y > 5)) {
+			if (!this._moved) {
+				this.fire('dragstart');
+				this._moved = true;
+			}
+			this._moving = true;
+			L.Util.cancelAnimFrame(this._animRequest);
+			this._animRequest = L.Util.requestAnimFrame(this._updatePosition, this, true, this._dragStartTarget);
+		}
 	},
 
 	_updatePosition: function () {
@@ -128,6 +131,8 @@ L.Draggable = L.Class.extend({
 
 		if (this._moved) {
 			this.fire('dragend');
+		} else {
+			this._map.fire('click');
 		}
 		this._moving = false;
 	},
