@@ -131,8 +131,6 @@ L.Draggable = L.Class.extend({
 
 		if (this._moved) {
 			this.fire('dragend');
-		} else {
-			this._map.fire('click');
 		}
 		this._moving = false;
 	},
