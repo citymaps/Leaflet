@@ -84,8 +84,10 @@ L.Draggable = L.Class.extend({
 
 		var first = (e.touches && e.touches.length === 1 ? e.touches[0] : e);
 
+
 		var newPoint = new L.Point(first.clientX, first.clientY);
 		this._newPos = this._startPos.add(newPoint).subtract(this._startPoint);
+
 		var delta = this._newPos.subtract(this._startPos);
 		if(Math.abs(delta.x) > 5 || Math.abs(delta.y > 5)) {
 			if (!this._moved) {
@@ -93,7 +95,6 @@ L.Draggable = L.Class.extend({
 				this._moved = true;
 			}
 			this._moving = true;
-			
 			L.Util.cancelAnimFrame(this._animRequest);
 			this._animRequest = L.Util.requestAnimFrame(this._updatePosition, this, true, this._dragStartTarget);
 		}
@@ -128,10 +129,6 @@ L.Draggable = L.Class.extend({
 		L.DomEvent.removeListener(document, L.Draggable.MOVE, this._onMove);
 		L.DomEvent.removeListener(document, L.Draggable.END, this._onUp);
 
-		if(this._newPos.x != this._startPos.x && this._newPos.y != this._startPos.y) {
-			this._moved = true;
-		}
-		
 		if (this._moved) {
 			this.fire('dragend');
 		}
