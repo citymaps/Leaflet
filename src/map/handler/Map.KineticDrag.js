@@ -127,7 +127,10 @@ L.Map.KineticDrag = L.Map.Drag.extend({
 			this._map.fire('dragend');
 		},this), 200);
     
-		
+		if (this._map.options.maxBounds) {
+			// TODO predrag validation instead of animation
+			L.Util.requestAnimFrame(this._panInsideMaxBounds, this._map, true, this._map._container);
+		}
 	},
 	
 	

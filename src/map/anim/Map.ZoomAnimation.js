@@ -89,6 +89,7 @@ L.Map.include(!L.DomUtil.TRANSITION ? {} : {
 
 		// tells tile layers to reinitialize their containers
 		tileBg.empty = true;
+		tileBg.innerHTML = '';
 		tilePane.empty = false;
 
 		this._tilePane = this._panes.tilePane = tileBg;
