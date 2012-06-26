@@ -10,6 +10,10 @@ L.Map.KineticDrag = L.Map.Drag.extend({
 	
 	threshold: 0,
 	
+	addHooks: function() {
+		L.Map.Drag.prototype.addHooks.apply(this);
+	},
+	
 	enable: function() {
 		this._map.on('mousedown', this._onMouseDown, this);
 		L.Map.Drag.prototype.enable.apply(this);
@@ -34,6 +38,31 @@ L.Map.KineticDrag = L.Map.Drag.extend({
 		}
 		this.points = [];
 		L.Map.Drag.prototype._onDragStart.apply(this);
+	},
+	
+	_onPreDrag: function(e) {
+		if(this._restrictToMaxBounds(e.delta)) {
+			console.log("Outside bounds");
+			this._draggable.doMove = false;
+		} else {
+			console.log("Inside bounds");
+			this._draggable.doMove = true;
+			L.Map.Drag.prototype._onPreDrag.apply(this);
+		}
+	},
+	
+	_restrictToMaxBounds: function(delta) {
+		if(this._map.options.maxBounds) {
+			var bounds = this._map.getPixelBounds();
+			bounds.min = bounds.min.subtract(delta);
+			bounds.max = bounds.max.subtract(delta);
+			var LLBounds = this._map.unprojectBounds(bounds);
+			//var newLatLng = this._map.unproject(tl);
+			if(!this._map.options.maxBounds.contains(LLBounds)) {
+				return true;
+			}
+		}
+		return false;
 	},
 	
 	_onDrag: function() {
@@ -103,11 +132,16 @@ L.Map.KineticDrag = L.Map.Drag.extend({
         }
 				var dx = x - lastX, dy = y - lastY;
 				//console.log("Kinetic Move");
-        this._map._rawPanBy(new L.Point(dx,dy));
-				this._map.fire('move');
-				this._map.fire('drag');
-        lastX = x;
-        lastY = y;
+				var delta = new L.Point(dx,dy);
+				if(this._restrictToMaxBounds(delta)) {
+					this._stopPanning();
+				} else {
+					this._map._rawPanBy(delta);
+					this._map.fire('move');
+					this._map.fire('drag');
+	        lastX = x;
+	        lastY = y;
+				}
       };
       
       this.intervalID = window.setInterval(
@@ -127,10 +161,6 @@ L.Map.KineticDrag = L.Map.Drag.extend({
 			this._map.fire('dragend');
 		},this), 200);
     
-		if (this._map.options.maxBounds) {
-			// TODO predrag validation instead of animation
-			L.Util.requestAnimFrame(this._panInsideMaxBounds, this._map, true, this._map._container);
-		}
 	},
 	
 	

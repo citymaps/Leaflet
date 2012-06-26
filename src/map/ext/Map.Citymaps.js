@@ -129,6 +129,20 @@ L.Map.Citymaps = L.Map.extend({
 		return this.options.crs.pointToLatLng(point, zoom, unbounded);
 	},
 	
+	projectBounds: function(latlngbounds) {
+		var min = this.project(new L.LatLng(latlngbounds._southWest.lat, latlngbounds._northEast.lng), this._zoom, true),
+				max = this.project(new L.LatLng(latlngbounds._northEast.lat, latlngbounds._southWest.lng), this._zoom, true);
+
+		return new L.Bounds(min, max);
+	},
+	
+	unprojectBounds: function(bounds) {
+		var sw = this.unproject(new L.Point(bounds.min.x, bounds.max.y), this._zoom, true),
+				ne = this.unproject(new L.Point(bounds.max.x, bounds.min.y), this._zoom, true);
+
+		return new L.LatLngBounds(sw, ne);
+	},
+	
 	fitToScreen: function() {
 		this._container.style.width = $(window).width() + "px";
 		this._container.style.height = $(window).height() + "px";

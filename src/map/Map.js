@@ -470,6 +470,9 @@ L.Map = L.Class.extend({
 
 		if (zoomChanged || afterZoomAnim) {
 			this.fire('zoomend');
+			if(this._loaded && this.options.maxBounds) {
+				this.panInsideBounds(this.options.maxBounds);
+			}
 		}
 
 		this.fire('moveend');

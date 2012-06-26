@@ -11,6 +11,8 @@ L.Draggable = L.Class.extend({
 		MOVE: L.Browser.touch ? 'touchmove' : 'mousemove',
 		TAP_TOLERANCE: 15
 	},
+	
+	doMove: true,
 
 	initialize: function (element, dragStartTarget) {
 		this._element = element;
@@ -86,22 +88,27 @@ L.Draggable = L.Class.extend({
 
 
 		var newPoint = new L.Point(first.clientX, first.clientY);
-		this._newPos = this._startPos.add(newPoint).subtract(this._startPoint);
+		var newPos = this._startPos.add(newPoint).subtract(this._startPoint);
 
-		var delta = this._newPos.subtract(this._startPos);
+		var delta = newPos.subtract(this._startPos);
 		if(Math.abs(delta.x) > 5 || Math.abs(delta.y > 5)) {
-			if (!this._moved) {
-				this.fire('dragstart');
-				this._moved = true;
+			this.fire('predrag', {delta: delta});
+			if(this.doMove) {
+				this._newPos = newPos;
+				if (!this._moved) {
+					this.fire('dragstart');
+					this._moved = true;
+				}
+				this._moving = true;
+				L.Util.cancelAnimFrame(this._animRequest);
+				this._animRequest = L.Util.requestAnimFrame(this._updatePosition, this, true, this._dragStartTarget);
+			} else {
+				this.doMove = true;
 			}
-			this._moving = true;
-			L.Util.cancelAnimFrame(this._animRequest);
-			this._animRequest = L.Util.requestAnimFrame(this._updatePosition, this, true, this._dragStartTarget);
 		}
 	},
 
 	_updatePosition: function () {
-		this.fire('predrag');
 		L.DomUtil.setPosition(this._element, this._newPos);
 		this.fire('drag');
 	},
