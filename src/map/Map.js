@@ -469,13 +469,14 @@ L.Map = L.Class.extend({
 		this.fire('move');
 
 		if (zoomChanged || afterZoomAnim) {
+			this.fire('moveend');
 			this.fire('zoomend');
 			if(this._loaded && this.options.maxBounds) {
 				this.panInsideBounds(this.options.maxBounds);
 			}
+		} else {
+			this.fire('moveend');
 		}
-
-		this.fire('moveend');
 
 		if (!this._loaded) {
 			this._loaded = true;
@@ -497,8 +498,10 @@ L.Map = L.Class.extend({
 	},
 
 	_rawPanBy: function (offset) {
-		var newPos = L.DomUtil.getPosition(this._mapPane).subtract(offset);
-		L.DomUtil.setPosition(this._mapPane, newPos);
+		if(offset.x > 5 || offset.y > 5) {
+			var newPos = L.DomUtil.getPosition(this._mapPane).subtract(offset);
+			L.DomUtil.setPosition(this._mapPane, newPos);
+		}
 	},
 
 

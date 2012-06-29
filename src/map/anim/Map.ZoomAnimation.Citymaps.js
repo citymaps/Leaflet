@@ -11,6 +11,10 @@ L.Map.include(!L.DomUtil.TRANSITION ? {} : {
 		if (!this._offsetIsWithinView(offset, 1)) { return false; }
 		
 		this._mapPane.className += ' leaflet-zoom-anim';
+		
+		this
+			.fire('movestart')
+			.fire('zoomstart');
 
 		var centerPoint = this.containerPointToLayerPoint(this.getSize().divideBy(2)),
 			origin = centerPoint.add(offset);
