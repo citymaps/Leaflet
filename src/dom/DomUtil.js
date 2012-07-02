@@ -132,8 +132,6 @@ L.DomUtil = {
 	},
 
 	setPosition: function (el, point) {
-		console.log(arguments.callee.caller.toString());
-		console.log(el);
 		el._leaflet_pos = point;
 		if (L.Browser.webkit3d) {
 			el.style[L.DomUtil.TRANSFORM] =  L.DomUtil.getTranslateString(point);

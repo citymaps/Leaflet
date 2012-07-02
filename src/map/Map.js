@@ -498,10 +498,8 @@ L.Map = L.Class.extend({
 	},
 
 	_rawPanBy: function (offset) {
-		if(offset.x > 5 || offset.y > 5) {
-			var newPos = L.DomUtil.getPosition(this._mapPane).subtract(offset);
-			L.DomUtil.setPosition(this._mapPane, newPos);
-		}
+		var newPos = L.DomUtil.getPosition(this._mapPane).subtract(offset);
+		L.DomUtil.setPosition(this._mapPane, newPos);
 	},
 
 
