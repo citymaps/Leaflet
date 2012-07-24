@@ -42,10 +42,8 @@ L.Map.KineticDrag = L.Map.Drag.extend({
 	
 	_onPreDrag: function(e) {
 		if(this._restrictToMaxBounds(e.delta)) {
-			console.log("Outside bounds");
 			this._draggable.doMove = false;
 		} else {
-			console.log("Inside bounds");
 			this._draggable.doMove = true;
 			L.Map.Drag.prototype._onPreDrag.apply(this);
 		}
