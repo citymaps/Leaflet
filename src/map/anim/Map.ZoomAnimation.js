@@ -49,9 +49,11 @@ L.Map.include(!L.DomUtil.TRANSITION ? {} : {
 		clearTimeout(this._clearTileBgTimer);
 
 		//dumb FireFox hack, I have no idea why this magic zero translate fixes the scale transition problem
+    /* Commented out per this Leaflet commit: https://github.com/danzel/Leaflet/commit/b596383f450d16987dfd1a5e83640ece89b1fc19
 		if (L.Browser.gecko || window.opera) {
 			tileBg.style[transform] += ' translate(0,0)';
 		}
+    */
 
 		var scaleStr;
 
